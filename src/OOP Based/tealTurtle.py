@@ -1,5 +1,5 @@
 from datetime import datetime
-import pytz, random, json, base64
+import pytz, random, json, base64, os
 tz = pytz.timezone('Asia/Kolkata')
 def current_time():
     currentTime = datetime.now()
@@ -8,7 +8,7 @@ def current_time():
 def generate_id(role:str):
     created_at = str(current_time())
     # return (role + str(base64.b64encode(created_at.encode("ascii")).decode("ascii")))
-    return (role +"-"+ str(base64.b64encode(created_at.encode("utf-8")).rstrip(b'=').decode('utf-8')))
+    return (role[0] +"-"+ str(base64.b64encode(created_at.encode("utf-8")).rstrip(b'=').decode('utf-8')))
 
 
 
@@ -46,28 +46,48 @@ class Producer:
 # }
 class Broker:
     def __init__(self):
-        self.broker_data= {
-            "producers": [],
-            "consumers": [],
-            "queue": []
-        }
-        with open("broker.json", "w")as f:
-            json.dump(self.broker_data, f, indent=4)
+        self.file_path = "broker.json"
+        if os.path.exists(self.file_path):
+            with open(self.file_path, "r") as f:
+                try:
+                    self.broker_data = json.load(f)
+                except json.JSONDecodeError:
+                    self.broker_data = {
+                        "producers": [],
+                        "consumers": [],
+                        "queue": []
+                    }
+        else:
+            self.broker_data = {
+                "producers": [],
+                "consumers": [],
+                "queue": []
+            }
+
         print("[Broker] Broker initialized.")
 
     def store_data(self, data_obj, storage):
         pass
 
-    def connect(self,role, id):
-        if role== "Producer":
-            self.broker_data["producers"].append(id)
-        elif role == "Consumer":
-            self.broker_data["consumers"].append(id)
-        else:
-            return 0
-        with open("broker.json", "w")as f:
+    def _save(self):
+        """Helper to persist current broker data safely"""
+        with open(self.file_path, "w") as f:
             json.dump(self.broker_data, f, indent=4)
-            print(f"[Broker] {role} added to connection database.")
+
+    def connect(self,role, id):
+        """Register a Producer or Consumer, but don't lose existing data."""
+        if role == "Producer":
+            if id not in self.broker_data["producers"]:
+                self.broker_data["producers"].append(id)
+        elif role == "Consumer":
+            if id not in self.broker_data["consumers"]:
+                self.broker_data["consumers"].append(id)
+        else:
+            print(f"[Broker] Invalid role: {role}")
+            return 0
+
+        self._save()
+        print(f"[Broker] {role} '{id}' added to connection database.")
         return 1
 
 
