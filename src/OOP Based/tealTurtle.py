@@ -46,7 +46,9 @@ class Producer:
 # }
 class Broker:
     def __init__(self):
-        self.file_path = "broker.json"
+        current_directory = os.path.dirname(os.path.abspath(__file__))
+        self.file_path = os.path.join(current_directory, "broker.json")
+        print(self.file_path)
         if os.path.exists(self.file_path):
             with open(self.file_path, "r") as f:
                 try:

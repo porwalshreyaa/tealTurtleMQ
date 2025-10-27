@@ -1,9 +1,9 @@
 {
     "producers": [
-        "producer-MjAyNS0xMC0yNyAwNzoxNDoyNy4zMDY3MDUrMDU6MzA"
+        "p-MjAyNS0xMC0yNyAwOTozNTowOS41NzE4MDkrMDU6MzA"
     ],
     "consumers": [
-        "consumer-MjAyNS0xMC0yNyAwNzoxNDoyNy4zMTQ1NjYrMDU6MzA"
+        "c-MjAyNS0xMC0yNyAwOTozNTowOS41NzIyNjMrMDU6MzA"
     ],
     "queue": []
 }
