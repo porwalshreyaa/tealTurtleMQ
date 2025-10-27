@@ -1,0 +1,114 @@
+from datetime import datetime
+import pytz, random, json, base64
+tz = pytz.timezone('Asia/Kolkata')
+def current_time():
+    currentTime = datetime.now()
+    return tz.localize(currentTime)
+
+def generate_id(role:str):
+    created_at = str(current_time())
+    # return (role + str(base64.b64encode(created_at.encode("ascii")).decode("ascii")))
+    return (role +"-"+ str(base64.b64encode(created_at.encode("utf-8")).rstrip(b'=').decode('utf-8')))
+
+
+
+
+class Producer:
+    def __init__(self, broker):
+        self.broker = broker
+        self.producer_id = generate_id("producer")
+        print(f"{self.producer_id} initialized as Producer.")
+        return
+    def connect_broker(self):
+        if self.broker.connect("Producer", self.producer_id):
+            print("[Producer] Connection Established with broker")
+            return
+    def send(self, event):
+        pass
+
+
+
+# a new broker has stored lists of producers, consumers and event queue in disk
+# Ideal event example - where data and meta data are nested dicts
+
+# {
+#     "eventType": "OrderCreated",
+#     "timestamp": "2025-10-25....",
+#     "data": {
+#         "orderId": 125,
+#         "userId": 45,
+#         "amount": 1999.99
+#     },
+#     "metadata": {
+#         "source": "orderService",
+#         "traceId": "abc-123"
+#     }
+# }
+class Broker:
+    def __init__(self):
+        self.broker_data= {
+            "producers": [],
+            "consumers": [],
+            "queue": []
+        }
+        with open("broker.json", "w")as f:
+            json.dump(self.broker_data, f, indent=4)
+        print("[Broker] Broker initialized.")
+
+    def store_data(self, data_obj, storage):
+        pass
+
+    def connect(self,role, id):
+        if role== "Producer":
+            self.broker_data["producers"].append(id)
+        elif role == "Consumer":
+            self.broker_data["consumers"].append(id)
+        else:
+            return 0
+        with open("broker.json", "w")as f:
+            json.dump(self.broker_data, f, indent=4)
+            print(f"[Broker] {role} added to connection database.")
+        return 1
+
+
+
+    def receive(self, event,topic):
+        if topics[topic]:
+            topics[topic].append(event)
+        else:
+            topics[topic] = []
+            topics[topic].append(event)
+
+
+
+
+    def deliver(self):
+        if  Consumer.receive():
+            return "[Broker] Delivered Successfully"
+        else:
+            count +=1
+    pass
+
+
+class Consumer:
+    def __init__(self, broker):
+        self.broker = broker
+        self.consumer_id = generate_id("consumer")
+        print(f"{self.consumer_id} initialized as Consumer.")
+        return
+    def connect_broker(self):
+        if self.broker.connect("Consumer", self.consumer_id):
+            print("[Consumer] Connection Established with broker")
+            return
+    def receive():
+        availability = random.choices([0,1])
+        if availability[0] ==1:
+            return 1
+        return 0
+    pass
+
+broker = Broker()
+producer1 = Producer(broker)
+producer1.connect_broker()
+consumer1 = Consumer(broker)
+consumer1.connect_broker()
