@@ -1,9 +1,25 @@
 {
     "producers": [
-        "p-MjAyNS0xMC0yNyAwOTozNTowOS41NzE4MDkrMDU6MzA"
+        "p-MjAyNS0xMC0zMCAwNjoxMTo1My40Mzk4MzIrMDU6MzA"
     ],
     "consumers": [
-        "c-MjAyNS0xMC0yNyAwOTozNTowOS41NzIyNjMrMDU6MzA"
+        "c-MjAyNS0xMC0zMCAwNjoxMTo1My40NDA1MDUrMDU6MzA"
     ],
-    "queue": []
+    "queue": {
+        "OrderCreated": [
+            {
+                "eventType": "OrderCreated",
+                "timestamp": "2025-10-25....",
+                "data": {
+                    "orderId": 125,
+                    "userId": 45,
+                    "amount": 1999.99
+                },
+                "metadata": {
+                    "source": "orderService",
+                    "traceId": "abc-123"
+                }
+            }
+        ]
+    }
 }

@@ -23,8 +23,9 @@ class Producer:
         if self.broker.connect("Producer", self.producer_id):
             print("[Producer] Connection Established with broker")
             return
-    def send(self, event):
-        pass
+    def send(self, event, topic):
+        self.broker.receive(self.producer_id, event, topic)
+        print("[Producer] Event sent to broker")
 
 
 
@@ -57,13 +58,13 @@ class Broker:
                     self.broker_data = {
                         "producers": [],
                         "consumers": [],
-                        "queue": []
+                        "queue": {}
                     }
         else:
             self.broker_data = {
                 "producers": [],
                 "consumers": [],
-                "queue": []
+                "queue": {}
             }
 
         print("[Broker] Broker initialized.")
@@ -94,12 +95,23 @@ class Broker:
 
 
 
-    def receive(self, event,topic):
-        if topics[topic]:
-            topics[topic].append(event)
+    def receive(self, producer, event,topic):
+        topics = self.broker_data["queue"]
+        if producer in self.broker_data["producers"]:
+            if topic in topics:
+                topics[topic].append(event)
+                self._save()
+                print(f"[Broker] Event {event} shared by producer '{producer}' added to topic '{topic}'.")
+                return 1
+            else:
+                topics[topic] = []
+                topics[topic].append(event)
+                self._save()
+                print(f"[Broker] Event {event} shared by producer '{producer}' added to topic '{topic}'.")
+                return 1
         else:
-            topics[topic] = []
-            topics[topic].append(event)
+            print("[Broker] Failed: Not a connection")
+            return 0
 
 
 
@@ -134,3 +146,20 @@ producer1 = Producer(broker)
 producer1.connect_broker()
 consumer1 = Consumer(broker)
 consumer1.connect_broker()
+
+
+newEvent = {
+    "eventType": "OrderCreated",
+    "timestamp": "2025-10-25....",
+    "data": {
+        "orderId": 125,
+        "userId": 45,
+        "amount": 1999.99
+    },
+    "metadata": {
+        "source": "orderService",
+        "traceId": "abc-123"
+    }
+}
+
+producer1.send(newEvent, "OrderCreated")
