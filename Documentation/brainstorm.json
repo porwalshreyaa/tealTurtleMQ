@@ -1,0 +1,29 @@
+{
+  "Amazon": {
+    "metadata": {
+      "owner": "",
+      "purpose": "",
+      "environment": "idk about this one, read in aws sqs's doc - will research about it"
+    },
+    "data": {
+      "msgs": [
+        {
+          "identifier_for_msg": 1,
+          "visibility_timeout": "",
+          "message_retention_period": "4 days: default, 60 sec: min, 14 days: max"
+        },
+        {
+          "identifier_for_msg": 2,
+          "visibility_timeout": "",
+          "message_retention_period": "4 days"
+        },
+        {
+          "identifier_for_msg": 3,
+          "visibility_timeout": "",
+          "message_retention_period": "4 days"
+        }
+      ]
+    },
+    "identifier- queue URL": "user account number + queue Name + other SQS components- eg. https://sqs.us-east-2.amazonaws.com/123456789012/MyQueue"
+  }
+}
