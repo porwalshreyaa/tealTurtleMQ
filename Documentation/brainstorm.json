@@ -1,5 +1,11 @@
 {
-  "Amazon": {
+  "Connection": {
+    "Role": "Producer/Consumer",
+    "username": "anynameUnique",
+    "password": "secretkey"
+  },
+
+  "Queue": {
     "metadata": {
       "owner": "",
       "purpose": "",
@@ -25,5 +31,23 @@
       ]
     },
     "identifier- queue URL": "user account number + queue Name + other SQS components- eg. https://sqs.us-east-2.amazonaws.com/123456789012/MyQueue"
+  },
+
+  "queue example": {
+    "OrderCreated": [
+      {
+        "eventType": "OrderCreated",
+        "timestamp": "2025-10-25....",
+        "data": {
+          "orderId": 125,
+          "userId": 45,
+          "amount": 1999.99
+        },
+        "metadata": {
+          "source": "orderService",
+          "traceId": "abc-123"
+        }
+      }
+    ]
   }
 }

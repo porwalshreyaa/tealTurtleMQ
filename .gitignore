@@ -1,0 +1,4 @@
+/venv/
+/src/Broker/utils/__pycache__/
+/src/Broker/*.db
+/src/Broker/__pycache__/

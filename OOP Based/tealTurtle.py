@@ -123,7 +123,7 @@ class Broker:
             count +=1
     pass
 
-
+# too lazy to write object based code for consumer, I am moving to APIs now :)
 class Consumer:
     def __init__(self, broker):
         self.broker = broker
